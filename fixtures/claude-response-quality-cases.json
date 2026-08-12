@@ -216,6 +216,10 @@
         "identical artifact",
         "close copy of production",
         "nothing downstream references source code",
+        "deployable image",
+        "every later stage depends",
+        "tests the image",
+        "only branch point",
         "only automatic stop",
         "everything else is automated",
         "tag it with the commit sha"

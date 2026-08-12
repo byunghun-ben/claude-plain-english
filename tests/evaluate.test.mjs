@@ -253,6 +253,16 @@ const goodStatus =
   assert.equal(score.absolutePass, false, "a process walkthrough must reject unstated implementation details");
   assert(score.facts.forbiddenMatches.includes("the same image"));
   assert(score.facts.forbiddenMatches.includes("close copy of production"));
+
+  const subtleInvented =
+    "The pipeline builds a deployable image that every later stage depends on, then tests the image before " +
+    "staging. If a contract test fails, it stops before staging. After manual approval it publishes to " +
+    "production. The contract test is the only branch point.";
+  const subtleScore = scoreOutput(pipelineCase, subtleInvented);
+  assert.equal(subtleScore.absolutePass, false, "a process walkthrough must reject invented stage semantics");
+  assert(subtleScore.facts.forbiddenMatches.includes("every later stage depends"));
+  assert(subtleScore.facts.forbiddenMatches.includes("tests the image"));
+  assert(subtleScore.facts.forbiddenMatches.includes("only branch point"));
 }
 
 {
