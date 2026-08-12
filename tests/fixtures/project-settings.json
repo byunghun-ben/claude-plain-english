@@ -1,0 +1,35 @@
+{
+  "permissions": {
+    "allow": [
+      "Read",
+      "Grep"
+    ],
+    "deny": [
+      "Bash(curl:*)"
+    ]
+  },
+  "hooks": {
+    "Notification": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/usr/bin/true"
+          }
+        ]
+      }
+    ]
+  },
+  "enabledPlugins": {
+    "fixture-plugin@fixture-marketplace": false
+  },
+  "outputStyle": "Explanatory",
+  "customSentinel": {
+    "owner": "project-fixture",
+    "values": [
+      "alpha",
+      "beta"
+    ]
+  }
+}

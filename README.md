@@ -10,9 +10,10 @@ the available evidence.
 
 ## Current status
 
-The output style, its contract test, and the deterministic evaluator exist. The
-blinded comparison against Default, install E2E coverage, CI, and the release
-gate are not implemented yet, and no release has been validated or published.
+The output style, its contract test, the deterministic evaluator, and the
+isolated install E2E exist. The blinded comparison against Default, CI, and the
+release gate are not implemented yet, and no release has been validated or
+published.
 
 Implementation is tracked in GitHub issues and in [`.ralph/plan.md`](.ralph/plan.md).
 
@@ -38,6 +39,8 @@ fixtures/claude-response-quality-cases.json   # synthetic English quality cases
 scripts/evaluate.mjs                          # deterministic scoring, no model calls
 tests/plugin-contract.test.mjs                # plugin surface and style contract
 tests/evaluate.test.mjs                       # fixture schema and scoring tests
+tests/install-e2e.mjs                         # isolated plugin lifecycle
+tests/fixtures/                               # settings and MCP files the E2E must preserve
 .ralph/plan.md                                # implementation stories
 ```
 
@@ -62,6 +65,21 @@ node scripts/evaluate.mjs validate
 ```sh
 node tests/evaluate.test.mjs
 ```
+
+The install E2E needs a real Claude Code executable. It builds a throwaway
+`HOME`, config directory, plugin cache, and project, and it fails if the real
+`~/.claude` changes.
+
+```sh
+node tests/install-e2e.mjs --scope user --claude "$(command -v claude)"
+```
+
+```sh
+node tests/install-e2e.mjs --scope project --claude "$(command -v claude)"
+```
+
+Add `--expect-claude-version "2.1.228 (Claude Code)"` to pin the executable to
+one version. Without it the run reports the version it observed.
 
 ## Evaluation model
 
