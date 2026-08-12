@@ -1,0 +1,22 @@
+# Raw model responses and conversation captures
+raw-output/
+raw-model-output/
+*.raw.json
+*.raw.jsonl
+*.transcript.json
+*.transcript.jsonl
+
+# Temporary evaluation evidence
+.evaluation-evidence/
+evaluation-evidence/
+tmp/
+coverage/
+
+# OS and editor files
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*.swo
+*~

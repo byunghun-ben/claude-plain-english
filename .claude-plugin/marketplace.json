@@ -1,0 +1,14 @@
+{
+  "name": "claude-plain-english",
+  "description": "A planned reader-first English output style for Claude Code.",
+  "owner": {
+    "name": "Byunghun"
+  },
+  "plugins": [
+    {
+      "name": "plain-english",
+      "description": "A scaffold for direct English that preserves facts, uncertainty, and verification boundaries.",
+      "source": "./plugins/plain-english"
+    }
+  ]
+}

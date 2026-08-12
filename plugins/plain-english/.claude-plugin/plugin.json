@@ -1,0 +1,16 @@
+{
+  "name": "plain-english",
+  "description": "A scaffold for a direct, reader-first English output style.",
+  "version": "0.0.0",
+  "author": {
+    "name": "Byunghun"
+  },
+  "homepage": "https://github.com/byunghun-ben/claude-plain-english",
+  "repository": "https://github.com/byunghun-ben/claude-plain-english",
+  "license": "MIT",
+  "keywords": [
+    "english",
+    "output-style",
+    "writing"
+  ]
+}
