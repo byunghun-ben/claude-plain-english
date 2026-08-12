@@ -1,0 +1,419 @@
+{
+  "version": 1,
+  "description": "Invented English response-quality cases. Every prompt is synthetic. None of them is a copied conversation, a customer record, or an operational log.",
+  "rubric": {
+    "dimensions": [
+      "factual_fidelity",
+      "calibrated_certainty",
+      "reader_first_order",
+      "plain_idiomatic_english",
+      "terminology_clarity",
+      "formatting_restraint"
+    ]
+  },
+  "cases": [
+    {
+      "id": "checkout-status",
+      "category": "status",
+      "prompt": "Tell the team where the invented checkout work stands. The payment error fix is done and 18 automated tests pass. Verification on a physical iOS device has not happened yet.",
+      "requiredFacts": [
+        { "id": "fix", "patternGroups": [["payment error"], ["fix", "done", "complete", "resolved"]] },
+        { "id": "tests", "patternGroups": [["18"], ["test"], ["pass", "green", "succeed"]] },
+        { "id": "device-gap", "patternGroups": [["ios"], ["device", "hardware"]] }
+      ],
+      "forbiddenFacts": [
+        "verified on a physical device",
+        "device testing is complete",
+        "ready to ship",
+        "released to production"
+      ],
+      "forbiddenPatterns": [],
+      "mustExpressUncertainty": false,
+      "uncertaintyPatterns": [],
+      "mustReportUnperformedVerification": true,
+      "verificationPatterns": ["not yet", "has not", "have not", "not been", "still pending", "outstanding"],
+      "strengthenedCertaintyPatterns": [
+        "\\bfully (?:tested|verified)\\b",
+        "\\ball (?:testing|verification) (?:is )?complete\\b"
+      ],
+      "rubricDimensions": [
+        "factual_fidelity",
+        "calibrated_certainty",
+        "reader_first_order",
+        "plain_idiomatic_english",
+        "formatting_restraint"
+      ]
+    },
+    {
+      "id": "sample-flag-not-found",
+      "category": "missing_information",
+      "prompt": "I searched the invented Example Console API reference and could not find `sample_flag`. The sample integration currently reads its notification setting from group metadata. Explain that to a non-engineer.",
+      "requiredFacts": [
+        {
+          "id": "not-found",
+          "patternGroups": [
+            ["sample_flag"],
+            ["could not find", "not find", "did not find", "not found", "no match", "was not in"]
+          ]
+        },
+        { "id": "current-source", "patternGroups": [["group metadata"], ["notification"]] }
+      ],
+      "forbiddenFacts": [
+        "sample_flag does not exist",
+        "there is no sample_flag",
+        "sample_flag was removed",
+        "temporary workaround",
+        "the original plan"
+      ],
+      "forbiddenPatterns": ["\\bnever existed\\b", "\\bno such (?:flag|field|setting)\\b"],
+      "mustExpressUncertainty": true,
+      "uncertaintyPatterns": [
+        "could not find",
+        "did not find",
+        "not found",
+        "unconfirmed",
+        "would need to check",
+        "further check"
+      ],
+      "mustReportUnperformedVerification": false,
+      "verificationPatterns": [],
+      "strengthenedCertaintyPatterns": ["sample_flag\\s+(?:does not|doesn't)\\s+exist"],
+      "rubricDimensions": [
+        "factual_fidelity",
+        "calibrated_certainty",
+        "terminology_clarity",
+        "plain_idiomatic_english"
+      ]
+    },
+    {
+      "id": "beta-planning-note",
+      "category": "decision",
+      "prompt": "Clean up this invented planning note. Confirmed: on April 12 the sample team decides whether to run a beta. Undecided: the public launch date. Next action: the example owner checks the cost table by April 9.",
+      "requiredFacts": [
+        { "id": "decision-date", "patternGroups": [["april 12"], ["decide", "decision"], ["beta"]] },
+        {
+          "id": "open-launch-date",
+          "patternGroups": [
+            ["launch date", "public launch"],
+            ["undecided", "not decided", "not been decided", "still open", "not set"]
+          ]
+        },
+        { "id": "next-action", "patternGroups": [["example owner"], ["april 9"], ["cost table"]] }
+      ],
+      "forbiddenFacts": [
+        "launches on April 12",
+        "the beta is confirmed",
+        "public launch on April 12",
+        "beta launch date"
+      ],
+      "forbiddenPatterns": ["\\bbeta (?:is|has been) (?:confirmed|approved)\\b"],
+      "mustExpressUncertainty": true,
+      "uncertaintyPatterns": ["undecided", "not decided", "not been decided", "still open", "not set"],
+      "mustReportUnperformedVerification": false,
+      "verificationPatterns": [],
+      "strengthenedCertaintyPatterns": ["\\blaunch(?:es|ing)? on april 12\\b"],
+      "rubricDimensions": [
+        "factual_fidelity",
+        "calibrated_certainty",
+        "reader_first_order",
+        "plain_idiomatic_english",
+        "formatting_restraint"
+      ]
+    },
+    {
+      "id": "batch-or-streaming",
+      "category": "recommendation",
+      "prompt": "We can keep the invented nightly batch job or move to the sample streaming pipeline. Batch is simpler to operate but delivers data once a day. Streaming is closer to real time but needs an extra service to run. Recommend one.",
+      "requiredFacts": [
+        { "id": "recommendation", "patternGroups": [["recommend", "i would go with", "go with", "choose", "pick", "stay with", "keep"]] },
+        { "id": "batch-tradeoff", "patternGroups": [["batch"], ["simpler", "simple", "easier"], ["once a day", "daily", "one update a day"]] },
+        {
+          "id": "streaming-tradeoff",
+          "patternGroups": [
+            ["streaming"],
+            ["real time", "real-time"],
+            ["extra service", "another service", "additional service", "service to run"]
+          ]
+        }
+      ],
+      "forbiddenFacts": ["industry standard", "most teams", "best practice", "cuts latency by"],
+      "forbiddenPatterns": ["\\b\\d+\\s*%", "\\b\\d+\\s*(?:x|times) (?:faster|cheaper)\\b"],
+      "mustExpressUncertainty": false,
+      "uncertaintyPatterns": [],
+      "mustReportUnperformedVerification": false,
+      "verificationPatterns": [],
+      "strengthenedCertaintyPatterns": [],
+      "rubricDimensions": [
+        "factual_fidelity",
+        "reader_first_order",
+        "plain_idiomatic_english",
+        "formatting_restraint"
+      ]
+    },
+    {
+      "id": "retry-budget-explanation",
+      "category": "technical_explanation",
+      "prompt": "Explain to a product manager what the invented `retry_budget` setting does. In this sample service it caps how many times a failed request is retried within one minute, and requests over the cap are dropped.",
+      "requiredFacts": [
+        { "id": "identifier", "patterns": ["retry_budget"] },
+        { "id": "cap-window", "patternGroups": [["retr"], ["one minute", "per minute", "a minute"], ["cap", "limit", "maximum", "at most"]] },
+        { "id": "overflow", "patternGroups": [["drop", "discard", "not retried", "gives up"]] }
+      ],
+      "forbiddenFacts": ["queued for later", "retried indefinitely", "improves performance by"],
+      "forbiddenPatterns": ["\\b\\d+\\s*(?:retries|attempts) per minute\\b"],
+      "mustExpressUncertainty": false,
+      "uncertaintyPatterns": [],
+      "mustReportUnperformedVerification": false,
+      "verificationPatterns": [],
+      "strengthenedCertaintyPatterns": [],
+      "rubricDimensions": [
+        "factual_fidelity",
+        "terminology_clarity",
+        "reader_first_order",
+        "plain_idiomatic_english"
+      ]
+    },
+    {
+      "id": "dry-run-question",
+      "category": "short_answer",
+      "prompt": "Does the invented `--dry-run` flag write files in this sample CLI? It does not. One line is enough.",
+      "requiredFacts": [
+        {
+          "id": "answer",
+          "patternGroups": [
+            ["--dry-run", "dry-run", "dry run"],
+            ["does not write", "no files", "without writing", "nothing is written", "no changes", "writes nothing"]
+          ]
+        }
+      ],
+      "forbiddenFacts": ["writes files to disk", "creates a backup", "safe to run in production"],
+      "forbiddenPatterns": [],
+      "mustExpressUncertainty": false,
+      "uncertaintyPatterns": [],
+      "mustReportUnperformedVerification": false,
+      "verificationPatterns": [],
+      "strengthenedCertaintyPatterns": [],
+      "rubricDimensions": ["factual_fidelity", "plain_idiomatic_english", "formatting_restraint"]
+    },
+    {
+      "id": "deploy-pipeline-walkthrough",
+      "category": "long_answer",
+      "prompt": "Walk a new teammate through the invented sample deploy pipeline end to end. The stages are: build the image, run the contract tests, publish to the staging cluster, wait for a manual approval, then publish to production. A failed contract test stops the pipeline before staging.",
+      "requiredFacts": [
+        { "id": "build", "patternGroups": [["build"], ["image"]] },
+        { "id": "contract-tests", "patterns": ["contract test"] },
+        { "id": "staging", "patterns": ["staging"] },
+        { "id": "approval", "patternGroups": [["manual approval", "approval", "approve"]] },
+        { "id": "production", "patterns": ["production"] },
+        { "id": "failure-behavior", "patternGroups": [["fail"], ["stop", "halt", "does not continue", "before staging"]] }
+      ],
+      "forbiddenFacts": ["rollback is automatic", "canary", "blue-green", "takes about"],
+      "forbiddenPatterns": ["\\b\\d+\\s*(?:minutes|hours|seconds)\\b"],
+      "mustExpressUncertainty": false,
+      "uncertaintyPatterns": [],
+      "mustReportUnperformedVerification": false,
+      "verificationPatterns": [],
+      "strengthenedCertaintyPatterns": [],
+      "rubricDimensions": [
+        "factual_fidelity",
+        "reader_first_order",
+        "plain_idiomatic_english",
+        "formatting_restraint"
+      ]
+    },
+    {
+      "id": "sample-environment-variables",
+      "category": "necessary_list",
+      "prompt": "List the four invented environment variables the sample service reads and what each one is for. SAMPLE_API_URL is the endpoint, SAMPLE_TIMEOUT_MS is the request timeout, SAMPLE_RETRY_BUDGET is the retry cap, SAMPLE_LOG_LEVEL is the log verbosity.",
+      "requiredFacts": [
+        { "id": "api-url", "patternGroups": [["sample_api_url"], ["endpoint", "url", "address"]] },
+        { "id": "timeout", "patternGroups": [["sample_timeout_ms"], ["timeout", "time out"]] },
+        { "id": "retry-budget", "patternGroups": [["sample_retry_budget"], ["retry", "retries"]] },
+        { "id": "log-level", "patternGroups": [["sample_log_level"], ["log"]] }
+      ],
+      "forbiddenFacts": ["SAMPLE_API_KEY", "the default value is", "required in production"],
+      "forbiddenPatterns": ["\\bdefaults? to \\d+\\b"],
+      "mustExpressUncertainty": false,
+      "uncertaintyPatterns": [],
+      "mustReportUnperformedVerification": false,
+      "verificationPatterns": [],
+      "strengthenedCertaintyPatterns": [],
+      "rubricDimensions": [
+        "factual_fidelity",
+        "terminology_clarity",
+        "formatting_restraint",
+        "plain_idiomatic_english"
+      ]
+    },
+    {
+      "id": "nightly-job-failure",
+      "category": "unnecessary_list",
+      "prompt": "In a sentence or two, why did the invented nightly job fail last night? It ran out of disk space while writing the export file.",
+      "requiredFacts": [
+        { "id": "cause", "patternGroups": [["disk space", "disk"], ["export"]] }
+      ],
+      "forbiddenFacts": [
+        "I cleaned up",
+        "added monitoring",
+        "increased the volume",
+        "root cause analysis",
+        "to prevent this"
+      ],
+      "forbiddenPatterns": [],
+      "mustExpressUncertainty": false,
+      "uncertaintyPatterns": [],
+      "mustReportUnperformedVerification": false,
+      "verificationPatterns": [],
+      "strengthenedCertaintyPatterns": [],
+      "rubricDimensions": [
+        "factual_fidelity",
+        "formatting_restraint",
+        "reader_first_order",
+        "plain_idiomatic_english"
+      ]
+    },
+    {
+      "id": "parser-review-summary",
+      "category": "unperformed_verification",
+      "prompt": "Summarize this invented change for the reviewer. I edited the sample parser and updated its unit tests, but I have not run the test suite yet.",
+      "requiredFacts": [
+        { "id": "change", "patternGroups": [["parser"], ["unit test", "test"]] },
+        {
+          "id": "suite-not-run",
+          "patternGroups": [["not run", "have not run", "did not run", "not been run", "unrun", "still to run"]]
+        }
+      ],
+      "forbiddenFacts": ["the test suite passes", "all tests passed", "the suite is green", "verified locally"],
+      "forbiddenPatterns": ["\\btests? (?:are )?(?:passing|green)\\b"],
+      "mustExpressUncertainty": true,
+      "uncertaintyPatterns": ["not run", "have not run", "not been run", "unverified", "cannot say", "can't say"],
+      "mustReportUnperformedVerification": true,
+      "verificationPatterns": ["not run", "have not run", "did not run", "not been run", "still to run"],
+      "strengthenedCertaintyPatterns": ["\\bfully tested\\b", "\\bverified\\b"],
+      "rubricDimensions": [
+        "factual_fidelity",
+        "calibrated_certainty",
+        "reader_first_order",
+        "plain_idiomatic_english"
+      ]
+    },
+    {
+      "id": "duplicate-record-script",
+      "category": "claim_strength",
+      "prompt": "Rewrite this invented changelog line without changing what it claims: \"The sample team currently resolves duplicate records with a nightly script.\"",
+      "requiredFacts": [
+        { "id": "current-method", "patternGroups": [["nightly", "script"], ["duplicate"]] }
+      ],
+      "forbiddenFacts": [
+        "temporary workaround",
+        "stopgap",
+        "until a proper fix",
+        "interim solution",
+        "originally planned"
+      ],
+      "forbiddenPatterns": ["\\btemporar(?:y|ily)\\b", "\\bworkaround\\b", "\\bmanual (?:hack|patch)\\b"],
+      "mustExpressUncertainty": false,
+      "uncertaintyPatterns": [],
+      "mustReportUnperformedVerification": false,
+      "verificationPatterns": [],
+      "strengthenedCertaintyPatterns": ["\\bwill be replaced\\b", "\\bproper fix\\b"],
+      "rubricDimensions": [
+        "factual_fidelity",
+        "calibrated_certainty",
+        "plain_idiomatic_english"
+      ]
+    },
+    {
+      "id": "unmeasured-cache-gain",
+      "category": "no_invented_numbers",
+      "prompt": "How much faster will the invented caching change make the sample dashboard? We have not measured it yet.",
+      "requiredFacts": [
+        {
+          "id": "not-measured",
+          "patternGroups": [["not been measured", "not measured", "no measurement", "have not measured", "haven't measured", "no benchmark"]]
+        },
+        {
+          "id": "no-answer-available",
+          "patternGroups": [["cannot say", "can't say", "no way to say", "not able to say", "would need", "unknown", "depends"]]
+        }
+      ],
+      "forbiddenFacts": ["twice as fast", "noticeably faster by", "roughly half the time"],
+      "forbiddenPatterns": [
+        "\\b\\d+\\s*%",
+        "\\b\\d+\\s*(?:x|times) faster\\b",
+        "\\b\\d+\\s*(?:ms|milliseconds|seconds|minutes)\\b"
+      ],
+      "mustExpressUncertainty": true,
+      "uncertaintyPatterns": ["not been measured", "not measured", "cannot say", "can't say", "would need", "unknown"],
+      "mustReportUnperformedVerification": true,
+      "verificationPatterns": ["not been measured", "not measured", "no measurement", "have not measured", "no benchmark"],
+      "strengthenedCertaintyPatterns": ["\\bwill be (?:much|significantly|dramatically) faster\\b"],
+      "rubricDimensions": [
+        "factual_fidelity",
+        "calibrated_certainty",
+        "reader_first_order",
+        "plain_idiomatic_english"
+      ]
+    },
+    {
+      "id": "vendor-review-section",
+      "category": "document_edit",
+      "prompt": "Tighten this invented section without changing its meaning. \"We reviewed two vendors on March 3. Vendor A was preferred by the sample team. No contract has been signed. The security review is scheduled but has not started.\"",
+      "requiredFacts": [
+        { "id": "review-date", "patterns": ["march 3"] },
+        { "id": "preference", "patternGroups": [["vendor a"], ["prefer", "favor", "leaning", "front-runner"]] },
+        { "id": "no-contract", "patternGroups": [["contract"], ["no contract", "not been signed", "unsigned", "nothing signed"]] },
+        {
+          "id": "security-review-open",
+          "patternGroups": [["security review"], ["not started", "has not", "yet to start", "scheduled but"]]
+        }
+      ],
+      "forbiddenFacts": [
+        "signed with Vendor A",
+        "selected Vendor A as the vendor",
+        "the security review found",
+        "a contract is in place"
+      ],
+      "forbiddenPatterns": [
+        "\\bvendor a (?:was|is) (?:selected|chosen)\\b",
+        "\\bcontract (?:is|has been) signed\\b",
+        "\\bsecurity review (?:passed|is complete)\\b"
+      ],
+      "mustExpressUncertainty": true,
+      "uncertaintyPatterns": ["not been signed", "no contract", "not started", "scheduled", "yet to start"],
+      "mustReportUnperformedVerification": true,
+      "verificationPatterns": ["not started", "has not", "yet to start", "scheduled but"],
+      "strengthenedCertaintyPatterns": ["\\bvendor a (?:won|is the vendor)\\b"],
+      "rubricDimensions": [
+        "factual_fidelity",
+        "calibrated_certainty",
+        "reader_first_order",
+        "plain_idiomatic_english"
+      ]
+    },
+    {
+      "id": "uploader-commit-body",
+      "category": "deliverable",
+      "prompt": "Write the commit message body for an invented change that adds a retry cap to the sample uploader and adds two regression tests. Give me the body text only.",
+      "requiredFacts": [
+        { "id": "retry-cap", "patternGroups": [["retry"], ["cap", "limit", "budget", "maximum"]] },
+        { "id": "uploader", "patterns": ["uploader"] },
+        { "id": "tests", "patternGroups": [["two", "2 regression", "2 new", "2 tests"], ["regression test", "test"]] }
+      ],
+      "forbiddenFacts": [
+        "Let me know",
+        "I only used",
+        "if you want me to",
+        "Hope this helps",
+        "feel free to"
+      ],
+      "forbiddenPatterns": ["\\bhere(?:'s| is) the\\b", "\\bI (?:wrote|kept) (?:this|it)\\b"],
+      "mustExpressUncertainty": false,
+      "uncertaintyPatterns": [],
+      "mustReportUnperformedVerification": false,
+      "verificationPatterns": [],
+      "strengthenedCertaintyPatterns": [],
+      "rubricDimensions": ["factual_fidelity", "plain_idiomatic_english", "formatting_restraint"]
+    }
+  ]
+}
