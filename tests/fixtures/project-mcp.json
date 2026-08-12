@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "fixture-server": {
+      "type": "stdio",
+      "command": "/usr/bin/true",
+      "args": [],
+      "env": {
+        "PUBLIC_FIXTURE_SENTINEL": "preserve-me"
+      }
+    }
+  }
+}

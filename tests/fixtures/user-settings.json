@@ -1,0 +1,34 @@
+{
+  "permissions": {
+    "allow": [
+      "Read",
+      "Glob"
+    ],
+    "deny": [
+      "Bash(rm:*)"
+    ]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Read",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/usr/bin/true"
+          }
+        ]
+      }
+    ]
+  },
+  "enabledPlugins": {
+    "fixture-plugin@fixture-marketplace": true
+  },
+  "outputStyle": "Explanatory",
+  "customSentinel": {
+    "owner": "user-fixture",
+    "nested": {
+      "preserve": true
+    }
+  }
+}
