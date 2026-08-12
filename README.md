@@ -191,6 +191,18 @@ the commitment hashes are written there as mode `0600` files. Execution order an
 each reviewer's left/right layout come from separate derivations of the run seed,
 so both are reproducible and neither reveals the other.
 
+Authentication has to come from the environment. The isolated config directory
+that keeps your settings, hooks, and plugins out of a run also keeps your
+credentials out of it, so a run started from a normal interactive login answers
+`Not logged in`. Export a long-lived token, which the harness passes through,
+before starting a run:
+
+```sh
+claude setup-token
+```
+
+
+
 ```sh
 node scripts/compare.mjs packet --evidence /absolute/path/outside/this/repo --reviewer reviewer-a
 ```

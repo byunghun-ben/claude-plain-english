@@ -474,12 +474,20 @@ assert.deepEqual(CHOICES, ["left", "right", "tie"]);
 
   for (const args of [defaultArgs, plainArgs]) {
     assert(args.includes("--strict-mcp-config"), "MCP must be restricted");
-    assert.equal(args[args.indexOf("--mcp-config") + 1], "{}", "no MCP server may enter the run");
+    assert.equal(
+      args[args.indexOf("--mcp-config") + 1],
+      '{"mcpServers":{}}',
+      "no MCP server may enter the run, and Claude Code rejects a bare {}",
+    );
     assert.equal(args[args.indexOf("--settings") + 1], settingsPath, "settings must come from the isolated file");
     assert.equal(args[args.indexOf("--model") + 1], shared.model);
     assert.equal(args[args.indexOf("--effort") + 1], shared.effort);
-    assert.equal(args.at(-1), shared.prompt);
+    // --mcp-config is variadic, so the prompt has to lead, not trail.
+    assert.equal(args[0], shared.prompt, "the prompt must be the first argument");
+    assert.equal(args.indexOf(shared.prompt), 0);
+    assert(args.indexOf("--mcp-config") < args.length - 1);
   }
+  assert.throws(() => buildExecutionArgs({ ...shared, variant: "default", prompt: "  " }), /prompt must not be empty/);
   assert.equal(defaultArgs.includes("--plugin-dir"), false, "the default variant must load no plugin");
   assert(plainArgs.includes("--plugin-dir"), "the plain-english variant must load the plugin");
   assert.deepEqual(

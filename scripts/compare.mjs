@@ -38,6 +38,9 @@ const DEFAULT_FIXTURES = join(ROOT, "fixtures", "claude-response-quality-cases.j
 export const VARIANTS = ["default", "plain-english"];
 export const CHOICES = ["left", "right", "tie"];
 const STYLE_SETTING_VALUE = "plain-english:Plain English";
+// Claude Code rejects a bare {} here: the config must declare the mcpServers
+// record, empty in this case.
+const EMPTY_MCP_CONFIG = '{"mcpServers":{}}';
 const RATING_BEGUN_MARKER = "rating-begun";
 const DIRECTORY_MODE = 0o700;
 const FILE_MODE = 0o600;
@@ -439,7 +442,12 @@ function expectedSettingsSha256(variant) {
 // HOME, a fresh config directory, an empty project, an explicit settings file,
 // and MCP restricted to an empty config.
 export function buildExecutionArgs({ variant, prompt, model, effort, settingsPath }) {
+  if (typeof prompt !== "string" || !prompt.trim()) throw new Error("prompt must not be empty");
+  // The prompt comes first. --mcp-config takes a variable number of values, so
+  // a trailing positional argument is read as another MCP config path instead
+  // of as the prompt.
   const args = [
+    prompt,
     "--print",
     "--output-format",
     "text",
@@ -451,11 +459,10 @@ export function buildExecutionArgs({ variant, prompt, model, effort, settingsPat
     settingsPath,
     "--strict-mcp-config",
     "--mcp-config",
-    "{}",
+    EMPTY_MCP_CONFIG,
   ];
   if (variant === "plain-english") args.push("--plugin-dir", PLUGIN_ROOT);
   else if (variant !== "default") throw new Error(`unknown variant: ${variant}`);
-  args.push(prompt);
   return args;
 }
 
