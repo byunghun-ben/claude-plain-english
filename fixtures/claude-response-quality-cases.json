@@ -220,6 +220,8 @@
         "every later stage depends",
         "tests the image",
         "only branch point",
+        "no detail beyond what's stated",
+        "treat those as open questions",
         "only automatic stop",
         "everything else is automated",
         "tag it with the commit sha"

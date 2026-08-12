@@ -18,7 +18,7 @@ import { fileURLToPath } from "node:url";
 
 const REPOSITORY_ROOT = dirname(dirname(fileURLToPath(import.meta.url)));
 const EXPECTED_STYLE_SHA256 =
-  "dfdc1b550c5e3a021fa0168f639f7981f4fbda539a7815a03120fa63869a5934";
+  "e8ef155e044965faf8c194e0b0e8c33a7edafa02002be5ed63fc5edf3e1d0a37";
 const EXPECTED_MANIFEST_VERSION = "0.0.0";
 const ALLOWED_PLUGIN_PATHS = new Set([
   ".claude-plugin",
