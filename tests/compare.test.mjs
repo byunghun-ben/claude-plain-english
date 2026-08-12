@@ -34,6 +34,8 @@ const FIXTURES = JSON.parse(
 const SEED = "a1b2c3d4e5f60718";
 const CASE_IDS = ["checkout-status", "nightly-job-failure", "dry-run-question"];
 
+assert.equal(FIXTURES.cases.length, 14, "the documented optional comparison must stay aligned with the fixture set");
+
 function canonical(value) {
   return `${JSON.stringify(value, null, 2)}\n`;
 }
@@ -119,6 +121,15 @@ assert.throws(() => assertEvidencePathOutsideRepository("relative/path"), /must 
 assert.equal(assertEvidencePathOutsideRepository(tmpdir()), tmpdir());
 
 // ----- reproducible, independent randomization ------------------------------
+
+{
+  const fullPlan = buildRunPlan({
+    caseIds: FIXTURES.cases.map((testCase) => testCase.id),
+    repetitions: 2,
+    seed: SEED,
+  });
+  assert.equal(fullPlan.length, 56, "14 cases by 2 repetitions by 2 variants must produce 56 responses");
+}
 
 {
   const first = buildRunPlan({ caseIds: CASE_IDS, repetitions: 2, seed: SEED });
@@ -480,8 +491,12 @@ assert.deepEqual(CHOICES, ["left", "right", "tie"]);
       "no MCP server may enter the run, and Claude Code rejects a bare {}",
     );
     assert.equal(args[args.indexOf("--settings") + 1], settingsPath, "settings must come from the isolated file");
+    assert.equal(args[args.indexOf("--setting-sources") + 1], "", "no settings source may enter the run");
     assert.equal(args[args.indexOf("--model") + 1], shared.model);
     assert.equal(args[args.indexOf("--effort") + 1], shared.effort);
+    assert.equal(args[args.indexOf("--tools") + 1], "", "built-in tools must be disabled");
+    assert(args.includes("--disable-slash-commands"), "skills must be disabled");
+    assert(args.includes("--no-session-persistence"), "comparison sessions must not be saved");
     // --mcp-config is variadic, so the prompt has to lead, not trail.
     assert.equal(args[0], shared.prompt, "the prompt must be the first argument");
     assert.equal(args.indexOf(shared.prompt), 0);
@@ -503,14 +518,42 @@ assert.deepEqual(CHOICES, ["left", "right", "tie"]);
 
   const sandbox = { home: "/tmp/s/home", config: "/tmp/s/config", cache: "/tmp/s/cache", project: "/tmp/s/project" };
   const env = buildExecutionEnv(
-    { HOME: "/opt/operator-home", CLAUDE_CONFIG_DIR: "/opt/operator-home/.claude", AWS_ACCESS_KEY_ID: "leak", PATH: "/usr/bin" },
+    {
+      HOME: "/opt/operator-home",
+      CLAUDE_CONFIG_DIR: "/opt/operator-home/.claude",
+      AWS_ACCESS_KEY_ID: "leak",
+      GH_TOKEN: "leak",
+      RANDOM_OPERATOR_VALUE: "leak",
+      PATH: "/usr/bin",
+      LANG: "en_US.UTF-8",
+      ANTHROPIC_API_KEY: "test-auth-value",
+    },
     sandbox,
   );
   assert.equal(env.HOME, sandbox.home, "the operator HOME must not reach the run");
   assert.equal(env.CLAUDE_CONFIG_DIR, sandbox.config, "the operator config directory must not reach the run");
   assert.equal(env.CLAUDE_CODE_PLUGIN_CACHE_DIR, sandbox.cache);
   assert.equal("AWS_ACCESS_KEY_ID" in env, false, "unrelated provider credentials must be dropped");
-  assert.equal(env.PATH, "/usr/bin", "unrelated environment must survive");
+  assert.equal("GH_TOKEN" in env, false, "forge credentials must be dropped");
+  assert.equal("RANDOM_OPERATOR_VALUE" in env, false, "unknown shell state must be dropped");
+  assert.equal(env.PATH, "/usr/bin", "the executable path must survive");
+  assert.equal(env.LANG, "en_US.UTF-8", "the locale must survive");
+  assert.equal(env.ANTHROPIC_API_KEY, "test-auth-value", "supported model authentication must survive");
+  assert.deepEqual(
+    Object.keys(env).sort(),
+    [
+      "ANTHROPIC_API_KEY",
+      "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC",
+      "CLAUDE_CODE_PLUGIN_CACHE_DIR",
+      "CLAUDE_CONFIG_DIR",
+      "DISABLE_TELEMETRY",
+      "HOME",
+      "LANG",
+      "NO_COLOR",
+      "PATH",
+    ].sort(),
+    "the child environment must remain an allowlist",
+  );
   assert.throws(
     () => buildExecutionEnv({}, { ...sandbox, config: join(process.env.HOME ?? "/root", ".claude", "config") }),
     /escaped into the real ~\/\.claude/,

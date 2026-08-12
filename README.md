@@ -19,9 +19,9 @@ wording that outruns the evidence.
 
 The output style, its contract test, the deterministic evaluator, the isolated
 install E2E, the blinded comparison harness, the public-boundary check, and the
-release gate exist. The blinded comparison against Default has not been run, so
-there is no benchmark result, no attestation, and no released version. The
-release gate fails until those exist.
+release gate exist. No version has been released. A paid blinded comparison
+against Default is available as an optional evaluation, not as a release
+requirement, and it has not been run.
 
 Implementation is tracked in GitHub issues and in [`.ralph/plan.md`](.ralph/plan.md).
 
@@ -112,7 +112,8 @@ systems are not verified.
   make a wrong answer right.
 - It is English-only. Korean readers should use the separate Korean Plain plugin.
 - No comparison against Claude Code's Default style has been run, so this project
-  makes no claim about being better than Default.
+  makes no claim about being better than Default. A future comparison would
+  describe only its fixed cases, model, version, effort, and reviewers.
 
 ## Repository layout
 
@@ -163,8 +164,9 @@ node tests/install-e2e.mjs --scope user --claude "$(command -v claude)"
 The evaluator applies a factual hard gate: required facts must be present, and
 forbidden claims, strengthened certainty, unreported verification gaps, and
 non-English output all fail. Readability and the other mechanical measures are
-reported as observations and never change that verdict. Style quality itself is
-judged by blinded human review, which is a separate step.
+reported as observations and never change that verdict. Style quality can also
+be examined through optional blinded human review. That costs model calls and
+reviewer time, and it is not part of the release gate.
 
 Scoring reads recorded responses from disk. Producing those responses is an
 opt-in harness that is not part of these checks. [`docs/EVALUATION.md`](docs/EVALUATION.md)
@@ -173,11 +175,13 @@ what the operator attests.
 
 ## Blinded comparison
 
-`scripts/compare.mjs` runs the same fixture prompt through Default and through
-Plain English, keeping the Claude Code version, model, effort, and isolated
-settings identical so that only the variant differs. Each call gets a fresh
-`HOME`, config directory, plugin cache, and empty project, with MCP restricted to
-an empty config, so nothing from the operator's own setup enters a run.
+`scripts/compare.mjs` optionally runs the same fixture prompt through Default and
+through Plain English, keeping the Claude Code version, model, effort, and
+isolated execution environment identical. Each call gets a fresh `HOME`, config
+directory, plugin cache, and empty project. Settings sources, built-in tools,
+skills, MCP, and session persistence are disabled. The child process receives
+only the executable path, locale, temporary-directory setting, and supported
+Anthropic authentication from the operator's environment.
 
 ```sh
 node scripts/compare.mjs run --evidence /absolute/path/outside/this/repo \
@@ -185,23 +189,24 @@ node scripts/compare.mjs run --evidence /absolute/path/outside/this/repo \
   --seed 0123456789abcdef --repetitions 2 --allow-model-calls
 ```
 
+With the current 14 fixtures and two repetitions, this produces 28 pairs and 56
+responses. It is an exploratory comparison, not a pass/fail release gate.
+
 Model calls happen only with `--allow-model-calls`. The evidence directory must
 live outside this repository; raw responses, the variant mapping, the salt, and
 the commitment hashes are written there as mode `0600` files. Execution order and
 each reviewer's left/right layout come from separate derivations of the run seed,
 so both are reproducible and neither reveals the other.
 
-Authentication has to come from the environment. The isolated config directory
-that keeps your settings, hooks, and plugins out of a run also keeps your
-credentials out of it, so a run started from a normal interactive login answers
-`Not logged in`. Export a long-lived token, which the harness passes through,
-before starting a run:
+Authentication has to come from `ANTHROPIC_API_KEY` or
+`CLAUDE_CODE_OAUTH_TOKEN`. The isolated config directory that keeps your
+settings, hooks, and plugins out of a run also keeps your interactive login out
+of it, so a run started without one of those environment variables answers `Not
+logged in`. A long-lived token can be created before starting a run:
 
 ```sh
 claude setup-token
 ```
-
-
 
 ```sh
 node scripts/compare.mjs packet --evidence /absolute/path/outside/this/repo --reviewer reviewer-a
@@ -226,7 +231,8 @@ variant. A pair counts as a win only when every reviewer picked the same variant
 [`CONTRIBUTING.md`](CONTRIBUTING.md) covers how a change starts from a fixture.
 [`SECURITY.md`](SECURITY.md) covers reporting. [`docs/PUBLICATION-CONTRACT.md`](docs/PUBLICATION-CONTRACT.md)
 lists the entire public surface, and [`docs/RELEASE-CHECKLIST.md`](docs/RELEASE-CHECKLIST.md)
-describes the release gate.
+describes the release gate and the small manual response smoke test used before
+tagging. The full blinded comparison remains optional.
 
 ## License
 

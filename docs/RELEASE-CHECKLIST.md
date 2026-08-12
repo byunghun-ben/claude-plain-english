@@ -1,9 +1,8 @@
 # Release checklist
 
-The release gate is fail-closed. It checks the repository state and an external
-attestation, and it stops at the first thing it cannot verify. It never creates a
-remote, pushes a commit or a tag, or publishes a GitHub Release; those remain
-manual decisions taken after it passes.
+The release gate is fail-closed for repository and release metadata. It never
+creates a remote, pushes a commit or a tag, publishes a GitHub Release, or calls
+a model. Those remain separate manual decisions.
 
 ## Before tagging
 
@@ -23,41 +22,40 @@ node tests/run-all.mjs
 node scripts/check-public-boundary.mjs --repo . --working-tree
 ```
 
-## The benchmark attestation
+5. In a disposable environment, inspect at least three representative responses:
+   one short answer, one answer that must preserve uncertainty or an unperformed
+   check, and one longer technical explanation. Confirm that the style is
+   rendered, the source facts are preserved, and disabling the plugin stops the
+   style in a new session. Keep raw responses outside Git and record only the
+   result and execution identity in the release note.
 
-The gate requires an attestation file that lives outside this repository and is
-mode `0600`. It is produced from a completed blinded comparison and records only
-aggregates: the matrix, the review counts, the rating and pair outcomes, and the
-factual hard-gate pass rate per variant. It must not contain a response body, the
-variant mapping, or the salt, and the gate rejects any field it does not know.
+This small response smoke test verifies the runtime behavior that the install E2E
+cannot render. It is not a blinded comparison and does not support a superiority
+claim over Default.
 
-The attestation binds the result to the release: the commit, the tag, the plugin
-version, the style hash, the plugin tree hash, the fixture hash, the Claude Code
-version, the model, and the effort level. If any of those has moved since the run,
-the attestation is stale and the gate fails.
+## Optional blinded comparison
 
-Thresholds the gate enforces, all of which come from the benchmark definition:
+The Default-versus-Plain-English comparison is available when a broader style
+study is worth the model-call cost and reviewer time. It is not required for a
+release. The current 14 fixtures with two repetitions produce 28 pairs and 56
+responses. Any published result must stay scoped to its exact Claude Code
+version, model, effort, fixture set, and reviewers.
 
-- 12 cases, 2 repetitions, 24 pairs, 48 responses;
-- 2 reviewers and 48 ratings, all present and unique;
-- at least 36 non-tie ratings;
-- Plain English holds at least 60% of the non-tie ratings;
-- Plain English pair wins exceed Default pair wins, where a pair is a win only
-  when both reviewers picked that variant;
-- all 24 Plain English responses pass the factual hard gate, and that pass rate
-  is not lower than Default's.
+Raw responses, rating packets, the variant mapping, and the salt stay outside
+the repository as mode `0600` files. Only aggregate conclusions may be
+published. See `docs/EVALUATION.md` for the trust boundary.
 
 ## Running the gate
-
-```sh
-node scripts/release-gate.mjs --repo . --tag vX.Y.Z --attestation /absolute/path/outside/this/repo/attestation.json
-```
 
 Create the annotated tag on the release commit first; the gate requires an
 annotated tag pointing at `HEAD`.
 
 ```sh
 git tag -a vX.Y.Z -m "Plain English vX.Y.Z"
+```
+
+```sh
+node scripts/release-gate.mjs --repo . --tag vX.Y.Z
 ```
 
 ## After the gate passes
@@ -67,5 +65,4 @@ steps. Nothing in this repository performs them.
 
 ## Current state
 
-No comparison has been run and no attestation exists, so the gate cannot pass and
-no version has been released.
+No version has been released. The optional blinded comparison has not been run.

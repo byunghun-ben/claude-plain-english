@@ -11,6 +11,7 @@ const read = (path) => readFileSync(join(REPOSITORY_ROOT, path), "utf8");
 
 const README = read("README.md");
 const EVALUATION = read("docs/EVALUATION.md");
+const RELEASE_CHECKLIST = read("docs/RELEASE-CHECKLIST.md");
 const CHANGELOG = read("CHANGELOG.md");
 const MANIFEST = JSON.parse(read("plugins/plain-english/.claude-plugin/plugin.json"));
 const PLUGIN_ID = "plain-english@claude-plain-english";
@@ -22,6 +23,26 @@ const PINNED_CLAUDE_VERSION = "2.1.228";
   const allowlist = readAllowlist(REPOSITORY_ROOT);
   const missing = [...allowlist].filter((path) => !existsSync(join(REPOSITORY_ROOT, path)));
   assert.deepEqual(missing, [], `the publication contract lists paths that do not exist: ${missing.join(", ")}`);
+}
+
+// The paid comparison is optional and its documented matrix matches the current
+// fixture set. Repository and release metadata remain the automated gate.
+{
+  assert(
+    /optional blinded comparison/i.test(RELEASE_CHECKLIST),
+    "the release checklist must identify the blinded comparison as optional",
+  );
+  assert(
+    /current 14 fixtures/i.test(RELEASE_CHECKLIST) &&
+      /28 pairs and 56[\n ]+responses/i.test(RELEASE_CHECKLIST),
+    "the release checklist must document the current comparison matrix",
+  );
+  assert(
+    RELEASE_CHECKLIST.includes("node scripts/release-gate.mjs --repo . --tag vX.Y.Z"),
+    "the release checklist must show the metadata-only gate command",
+  );
+  assert(!RELEASE_CHECKLIST.includes("--attestation"), "the release gate must not require an attestation");
+  assert(/not a\s+release requirement/i.test(EVALUATION), "the evaluation policy must keep paid comparison optional");
 }
 
 // The README has to answer what this is and how to live with it.

@@ -1,9 +1,10 @@
 # Evaluation
 
-Quality here is measured in two separate ways, and they are not interchangeable.
-A factual hard gate is machine-checked and runs on every commit. Style quality is
-judged by blinded human comparison against Claude Code's Default style, and that
-comparison costs money and requires people.
+Quality here can be examined in two separate ways, and they are not
+interchangeable. A factual hard gate is machine-checked and runs on every commit.
+An optional blinded human comparison against Claude Code's Default style can
+explore style preference, but it costs money and requires people, so it is not a
+release requirement.
 
 ## The four layers
 
@@ -24,16 +25,19 @@ response.
 `scripts/compare.mjs run` is the only command that can reach a model, and only
 with `--allow-model-calls`. Each pair sends the same fixture prompt through
 Default and through Plain English with the same Claude Code version, model,
-effort, and isolated settings; only the `--plugin-dir` flag differs. Each call
-gets a fresh `HOME`, config directory, plugin cache, and empty project, with MCP
-restricted to an empty config, so the operator's own settings, hooks, MCP
-servers, other plugins, and prior sessions cannot enter a run.
+effort, and isolated execution environment. Each call gets a fresh `HOME`,
+config directory, plugin cache, and empty project. Settings sources, built-in
+tools, skills, MCP, and session persistence are disabled. An environment
+allowlist passes only the executable path, locale, temporary-directory setting,
+and supported Anthropic authentication, so unrelated shell state and credentials
+cannot enter a run.
 
 That isolation has a consequence worth stating: credentials live in the config
 directory alongside the settings, so a run cannot borrow an interactive login.
-Authentication has to arrive through the environment instead, from a long-lived
-token created with `claude setup-token` or from an API key. The harness passes
-those through and strips unrelated cloud and forge credentials.
+Authentication has to arrive through the environment instead, from
+`CLAUDE_CODE_OAUTH_TOKEN` created with `claude setup-token` or from
+`ANTHROPIC_API_KEY`. The harness passes those two supported credentials through
+and drops every other unknown environment variable.
 
 ### 3. Blinded review
 
@@ -89,22 +93,23 @@ Some parts of this pipeline are enforced by code, and some rest on the operator.
 Enforced by code: isolation of each run, identical execution identity inside a
 pair, opaque identifiers in packets, reproducible and independent randomization,
 commitment hashes over the responses and the mapping, refusal to overwrite
-evidence after rating begins, mode `0600` on private files, and every threshold
-in the release gate.
+evidence after rating begins, and mode `0600` on private files.
 
 Attested by the operator, not proven by code: that the reviewers are independent
 of each other, that they did not see the variant mapping before rating, and that
-ratings were recorded before the reveal. The release gate checks the numbers it
-is given; it cannot check how they were produced.
+ratings were recorded before the reveal. Aggregation checks the files it is
+given; it cannot check how the reviews were conducted.
 
 ## Scope of any claim
 
-A passing comparison is an operational result for one frozen benchmark: this
-fixture set, this Claude Code version, this model, this effort level, and these
-reviewers. It is not evidence that Plain English is generally better than
-Default, and no document in this repository may say that it is.
+A comparison result describes one fixed evaluation: this fixture set, this
+Claude Code version, this model, this effort level, and these reviewers. It is
+not evidence that Plain English is generally better than Default, and no
+document in this repository may say that it is.
 
 ## Current state
 
-The comparison has not been run. No benchmark result and no attestation exist,
-so the release gate cannot pass and no release has been validated or published.
+The current fixture set has 14 cases. With two repetitions, the optional
+comparison produces 28 pairs and 56 responses. It has not been run, and no
+version has been released. This does not block deterministic validation or a
+release.

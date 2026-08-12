@@ -43,9 +43,9 @@ npm install --global @anthropic-ai/claude-code@2.1.228
 CLAUDE_BIN=/absolute/path/to/claude node tests/run-all.mjs
 ```
 
-Raising the pinned version means the recorded benchmark no longer describes the
-verified environment, so it needs a fresh comparison run and a fresh attestation.
-Do that in its own issue.
+Raise the pinned version in its own issue and rerun the deterministic suite and
+install E2E. If a comparison result is being cited, rerun that optional
+comparison too; results do not transfer across Claude Code versions.
 
 ## Documentation and release changes
 
