@@ -1,6 +1,6 @@
 ---
 project: claude-plain-english
-source_issues: []
+source_issues: ["#1", "#2", "#3", "#4", "#5", "#6"]
 created: 2026-08-12
 status: confirmed
 critic_rounds: 2
