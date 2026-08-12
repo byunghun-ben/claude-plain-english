@@ -29,6 +29,12 @@ gets a fresh `HOME`, config directory, plugin cache, and empty project, with MCP
 restricted to an empty config, so the operator's own settings, hooks, MCP
 servers, other plugins, and prior sessions cannot enter a run.
 
+That isolation has a consequence worth stating: credentials live in the config
+directory alongside the settings, so a run cannot borrow an interactive login.
+Authentication has to arrive through the environment instead, from a long-lived
+token created with `claude setup-token` or from an API key. The harness passes
+those through and strips unrelated cloud and forge credentials.
+
 ### 3. Blinded review
 
 `scripts/compare.mjs packet` issues one packet per reviewer. A packet contains
