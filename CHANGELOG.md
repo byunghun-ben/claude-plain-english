@@ -14,7 +14,9 @@ This project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   calls, isolated runs, opaque rating packets, and commitment hashes.
 - An isolated install, disable, and uninstall E2E for user and project scope.
 - Documentation, deterministic CI, a public-boundary check, and a release gate
-  that requires an external benchmark attestation.
+  for repository and release metadata.
+- A hardened comparison sandbox that disables tools, skills, external settings,
+  MCP, and session persistence and passes only supported authentication and
+  essential process environment variables.
 
-No version has been released. The blinded comparison has not been run, so the
-release gate cannot pass yet.
+No version has been released. The optional blinded comparison has not been run.

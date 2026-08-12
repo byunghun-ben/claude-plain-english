@@ -26,4 +26,5 @@ commitment hashes — is produced by `scripts/compare.mjs` into a directory that
 must live outside this repository, written mode `0600`. None of it is tracked by
 Git, and `docs/PUBLICATION-CONTRACT.md` forbids publishing it.
 
-No comparison has been run, so no evidence directory exists yet.
+No comparison has been run, so no evidence directory exists yet. Comparison
+evidence is optional and is not required by the release gate.

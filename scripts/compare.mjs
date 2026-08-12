@@ -44,13 +44,16 @@ const EMPTY_MCP_CONFIG = '{"mcpServers":{}}';
 const RATING_BEGUN_MARKER = "rating-begun";
 const DIRECTORY_MODE = 0o700;
 const FILE_MODE = 0o600;
-const CREDENTIAL_ENV_KEYS = [
-  "AWS_ACCESS_KEY_ID",
-  "AWS_SECRET_ACCESS_KEY",
-  "AWS_SESSION_TOKEN",
-  "GOOGLE_APPLICATION_CREDENTIALS",
-  "GH_TOKEN",
-  "GITHUB_TOKEN",
+// A comparison run needs a path to launch Claude Code, locale settings for
+// stable text handling, and one supported Anthropic credential. Everything else
+// from the operator's shell is excluded by default.
+const PASSTHROUGH_ENV_KEYS = [
+  "PATH",
+  "LANG",
+  "LC_ALL",
+  "TMPDIR",
+  "ANTHROPIC_API_KEY",
+  "CLAUDE_CODE_OAUTH_TOKEN",
 ];
 
 function usage(exitCode = 0) {
@@ -457,9 +460,15 @@ export function buildExecutionArgs({ variant, prompt, model, effort, settingsPat
     effort,
     "--settings",
     settingsPath,
+    "--setting-sources",
+    "",
     "--strict-mcp-config",
     "--mcp-config",
     EMPTY_MCP_CONFIG,
+    "--tools",
+    "",
+    "--disable-slash-commands",
+    "--no-session-persistence",
   ];
   if (variant === "plain-english") args.push("--plugin-dir", PLUGIN_ROOT);
   else if (variant !== "default") throw new Error(`unknown variant: ${variant}`);
@@ -467,8 +476,10 @@ export function buildExecutionArgs({ variant, prompt, model, effort, settingsPat
 }
 
 export function buildExecutionEnv(baseEnv, sandbox) {
-  const environment = { ...baseEnv };
-  for (const key of CREDENTIAL_ENV_KEYS) delete environment[key];
+  const environment = {};
+  for (const key of PASSTHROUGH_ENV_KEYS) {
+    if (baseEnv[key] !== undefined) environment[key] = baseEnv[key];
+  }
   Object.assign(environment, {
     HOME: sandbox.home,
     CLAUDE_CONFIG_DIR: sandbox.config,
