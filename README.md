@@ -10,10 +10,10 @@ the available evidence.
 
 ## Current status
 
-The output style, its contract test, the deterministic evaluator, and the
-isolated install E2E exist. The blinded comparison against Default, CI, and the
-release gate are not implemented yet, and no release has been validated or
-published.
+The output style, its contract test, the deterministic evaluator, the isolated
+install E2E, and the blinded comparison harness exist. The comparison itself has
+not been run, and CI and the release gate are not implemented yet. No release
+has been validated or published.
 
 Implementation is tracked in GitHub issues and in [`.ralph/plan.md`](.ralph/plan.md).
 
@@ -37,9 +37,11 @@ plugins/plain-english/.claude-plugin/plugin.json
 plugins/plain-english/output-styles/plain-english.md
 fixtures/claude-response-quality-cases.json   # synthetic English quality cases
 scripts/evaluate.mjs                          # deterministic scoring, no model calls
+scripts/compare.mjs                           # blinded Default vs Plain English harness
 tests/plugin-contract.test.mjs                # plugin surface and style contract
 tests/evaluate.test.mjs                       # fixture schema and scoring tests
 tests/install-e2e.mjs                         # isolated plugin lifecycle
+tests/compare.test.mjs                        # blinding, commitments, aggregation
 tests/fixtures/                               # settings and MCP files the E2E must preserve
 .ralph/plan.md                                # implementation stories
 ```
@@ -91,6 +93,44 @@ judged by blinded human review, which is a separate step.
 
 Scoring reads recorded responses from disk. Producing those responses is an
 opt-in harness that is not part of these checks.
+
+## Blinded comparison
+
+`scripts/compare.mjs` runs the same fixture prompt through Default and through
+Plain English, keeping the Claude Code version, model, effort, and isolated
+settings identical so that only the variant differs. Each call gets a fresh
+`HOME`, config directory, plugin cache, and empty project, with MCP restricted to
+an empty config, so nothing from the operator's own setup enters a run.
+
+```sh
+node scripts/compare.mjs run --evidence /absolute/path/outside/this/repo \
+  --claude "$(command -v claude)" --model MODEL --effort EFFORT \
+  --seed 0123456789abcdef --repetitions 2 --allow-model-calls
+```
+
+Model calls happen only with `--allow-model-calls`. The evidence directory must
+live outside this repository; raw responses, the variant mapping, the salt, and
+the commitment hashes are written there as mode `0600` files. Execution order
+and each reviewer's left/right layout come from separate derivations of the run
+seed, so both are reproducible and neither reveals the other.
+
+```sh
+node scripts/compare.mjs packet --evidence /absolute/path/outside/this/repo --reviewer reviewer-a
+```
+
+A packet carries opaque pair and response IDs with the response bodies and
+nothing else. Issuing the first packet freezes the run: after that, `run` refuses
+to write into the same evidence directory, and any later edit to the responses or
+the mapping fails the commitment check.
+
+```sh
+node scripts/compare.mjs aggregate --evidence /absolute/path/outside/this/repo \
+  --ratings ratings-reviewer-a.json --ratings ratings-reviewer-b.json
+```
+
+Aggregation reveals the variants, rejects incomplete or duplicated ratings, and
+reports rating totals, pair outcomes, and the factual hard-gate pass rate per
+variant. A pair counts as a win only when every reviewer picked the same variant.
 
 ## License
 
