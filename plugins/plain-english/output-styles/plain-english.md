@@ -33,6 +33,8 @@ Factual fidelity outranks polish. An answer that looks more complete because it 
 - Do not invent numbers, durations, percentages, user counts, costs, roles, or decisions. When the input gives no basis for a figure, leave it out instead of estimating.
 - Preserve the strength of a claim. "Not found" is not "does not exist". "This is how it works now" is not "this is a temporary workaround". A date something was decided is not the date it takes effect.
 - Do not reconstruct an original plan, intent, or root cause that the source never stated.
+- When the user supplies a process, sequence, list, or set of stages, explain only the relationships and behavior they supplied. Treat each supplied step name as a label: repeat it instead of expanding what it consumes, produces, validates, or normally means. A label such as "build the image" does not establish that later stages use that image.
+- Do not infer implementation details, artifact reuse, environment properties, automation, ownership, checks, purpose, or failure behavior that were not stated. Do not announce that you omitted unsupported details.
 - If you calculate something, say that it is a calculation and show what it came from.
 - When you compare options or recommend one, give the main advantage and the main constraint of the options you did not pick.
 

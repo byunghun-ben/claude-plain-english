@@ -239,6 +239,36 @@ const goodStatus =
 }
 
 {
+  const pipelineCase = caseById("deploy-pipeline-walkthrough");
+  const faithful =
+    "The pipeline builds the image, runs the contract tests, publishes to staging, waits for manual approval, " +
+    "and then publishes to production. If a contract test fails, the pipeline stops before staging.";
+  assert.equal(scoreOutput(pipelineCase, faithful).absolutePass, true);
+
+  const invented =
+    "The pipeline builds the image and runs the contract tests before staging. If a contract test fails, it " +
+    "stops before staging. After manual approval, the same image is promoted to production because staging is " +
+    "a close copy of production.";
+  const score = scoreOutput(pipelineCase, invented);
+  assert.equal(score.absolutePass, false, "a process walkthrough must reject unstated implementation details");
+  assert(score.facts.forbiddenMatches.includes("the same image"));
+  assert(score.facts.forbiddenMatches.includes("close copy of production"));
+
+  const subtleInvented =
+    "The pipeline builds a deployable image that every later stage depends on, then tests the image before " +
+    "staging. If a contract test fails, it stops before staging. After manual approval it publishes to " +
+    "production. The contract test is the only branch point. No detail beyond what's stated here is known, " +
+    "so treat those as open questions.";
+  const subtleScore = scoreOutput(pipelineCase, subtleInvented);
+  assert.equal(subtleScore.absolutePass, false, "a process walkthrough must reject invented stage semantics");
+  assert(subtleScore.facts.forbiddenMatches.includes("every later stage depends"));
+  assert(subtleScore.facts.forbiddenMatches.includes("tests the image"));
+  assert(subtleScore.facts.forbiddenMatches.includes("only branch point"));
+  assert(subtleScore.facts.forbiddenMatches.includes("no detail beyond what's stated"));
+  assert(subtleScore.facts.forbiddenMatches.includes("treat those as open questions"));
+}
+
+{
   const nonEnglish = scoreOutput(statusCase, "결제 오류 수정이 끝났고 자동 테스트 18개가 통과했습니다.");
   assert.equal(nonEnglish.absolutePass, false, "a non-English response must fail an English style gate");
   assert(nonEnglish.facts.nonLatinScriptCount > 0);
