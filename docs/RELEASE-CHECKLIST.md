@@ -65,4 +65,5 @@ steps. Nothing in this repository performs them.
 
 ## Current state
 
-No version has been released. The optional blinded comparison has not been run.
+Version 0.1.0 is the first release. The optional blinded comparison has not been
+run and is not a release requirement.

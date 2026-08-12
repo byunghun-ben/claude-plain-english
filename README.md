@@ -17,11 +17,11 @@ wording that outruns the evidence.
 
 ## Current status
 
-The output style, its contract test, the deterministic evaluator, the isolated
-install E2E, the blinded comparison harness, the public-boundary check, and the
-release gate exist. No version has been released. A paid blinded comparison
-against Default is available as an optional evaluation, not as a release
-requirement, and it has not been run.
+Version 0.1.0 includes the output style, its contract test, the deterministic
+evaluator, the isolated install E2E, the blinded comparison harness, the
+public-boundary check, and the release gate. A paid blinded comparison against
+Default is available as an optional evaluation, not as a release requirement,
+and it has not been run.
 
 Implementation is tracked in GitHub issues and in [`.ralph/plan.md`](.ralph/plan.md).
 

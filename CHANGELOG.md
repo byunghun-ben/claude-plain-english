@@ -2,7 +2,7 @@
 
 This project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## v0.1.0
 
 ### Added
 
@@ -21,4 +21,5 @@ This project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - A process-description boundary and regression case that reject unstated
   artifact reuse, environment properties, and automation details.
 
-No version has been released. The optional blinded comparison has not been run.
+The optional blinded comparison has not been run and is not a release
+requirement.

@@ -19,7 +19,7 @@ import { fileURLToPath } from "node:url";
 const REPOSITORY_ROOT = dirname(dirname(fileURLToPath(import.meta.url)));
 const EXPECTED_STYLE_SHA256 =
   "e8ef155e044965faf8c194e0b0e8c33a7edafa02002be5ed63fc5edf3e1d0a37";
-const EXPECTED_MANIFEST_VERSION = "0.0.0";
+const EXPECTED_MANIFEST_VERSION = "0.1.0";
 const ALLOWED_PLUGIN_PATHS = new Set([
   ".claude-plugin",
   ".claude-plugin/plugin.json",
@@ -259,7 +259,7 @@ negativeCase(
     manifest.version = "9.9.9";
     writeFileSync(path, `${JSON.stringify(manifest, null, 2)}\n`);
   },
-  /version must be 0\.0\.0/,
+  new RegExp(`version must be ${EXPECTED_MANIFEST_VERSION.replaceAll(".", "\\.")}`),
 );
 
 negativeCase(
