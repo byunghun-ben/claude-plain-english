@@ -20,3 +20,6 @@ Thumbs.db
 *.swp
 *.swo
 *~
+
+# Ralph harness run state (host and process metadata)
+.ralph/execution.jsonl

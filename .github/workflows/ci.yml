@@ -1,0 +1,31 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  deterministic:
+    runs-on: macos-14
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install the pinned Claude Code
+        run: npm install --global @anthropic-ai/claude-code@2.1.228
+      - name: Verify the exact Claude Code version
+        run: test "$(claude --version)" = "2.1.228 (Claude Code)"
+      - name: Validate the marketplace and the plugin
+        run: |
+          claude plugin validate --strict "$GITHUB_WORKSPACE"
+          claude plugin validate --strict "$GITHUB_WORKSPACE/plugins/plain-english"
+      - name: Run the deterministic suite and the isolated install E2E
+        run: node tests/run-all.mjs
+      - name: Check the public boundary
+        run: node scripts/check-public-boundary.mjs --repo "$GITHUB_WORKSPACE" --working-tree

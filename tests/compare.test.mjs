@@ -495,7 +495,7 @@ assert.deepEqual(CHOICES, ["left", "right", "tie"]);
 
   const sandbox = { home: "/tmp/s/home", config: "/tmp/s/config", cache: "/tmp/s/cache", project: "/tmp/s/project" };
   const env = buildExecutionEnv(
-    { HOME: "/Users/example", CLAUDE_CONFIG_DIR: "/Users/example/.claude", AWS_ACCESS_KEY_ID: "leak", PATH: "/usr/bin" },
+    { HOME: "/opt/operator-home", CLAUDE_CONFIG_DIR: "/opt/operator-home/.claude", AWS_ACCESS_KEY_ID: "leak", PATH: "/usr/bin" },
     sandbox,
   );
   assert.equal(env.HOME, sandbox.home, "the operator HOME must not reach the run");
