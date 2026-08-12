@@ -18,7 +18,7 @@ import { fileURLToPath } from "node:url";
 
 const REPOSITORY_ROOT = dirname(dirname(fileURLToPath(import.meta.url)));
 const EXPECTED_STYLE_SHA256 =
-  "621009bbab2e91d4aef1edf145ed2c79ce03c2cecbaeb4e6e5f8df6f084e9587";
+  "f8fb8870c9073cf6e567d4bf0eab1c71db48bf88c0ed594c17942b2fb9c69894";
 const EXPECTED_MANIFEST_VERSION = "0.0.0";
 const ALLOWED_PLUGIN_PATHS = new Set([
   ".claude-plugin",
@@ -46,6 +46,7 @@ const REQUIRED_STYLE_COMMITMENTS = [
   { label: "unknowns and failures", pattern: /Never bury an unknown, a failure/ },
   { label: "unperformed verification", pattern: /a check you did not run/ },
   { label: "claim strength", pattern: /Preserve the strength of a claim/ },
+  { label: "process fact boundary", pattern: /When the user supplies a process, sequence, list, or set of stages/ },
   { label: "technical identifiers", pattern: /Keep code identifiers, commands, file names/ },
   { label: "clear is not short", pattern: /means clear and direct, not short/ },
 ];

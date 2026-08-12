@@ -18,5 +18,7 @@ This project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - A hardened comparison sandbox that disables tools, skills, external settings,
   MCP, and session persistence and passes only supported authentication and
   essential process environment variables.
+- A process-description boundary and regression case that reject unstated
+  artifact reuse, environment properties, and automation details.
 
 No version has been released. The optional blinded comparison has not been run.

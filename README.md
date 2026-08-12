@@ -33,6 +33,8 @@ Implementation is tracked in GitHub issues and in [`.ralph/plan.md`](.ralph/plan
 - Keep code identifiers, commands, file names, and API names exactly as they are.
 - Add a heading, a list, or a table only when it shows a real relationship.
 - Separate what was observed, what was inferred, and what is being proposed.
+- Explain supplied processes without inventing implementation details, artifact
+  reuse, environment properties, automation, ownership, or checks.
 - Never bury an unknown, a failure, a check that was not run, or a remaining risk.
 - Invent no numbers, durations, costs, roles, or decisions.
 - Preserve claim strength: "not found" is not "does not exist", and "this is how
