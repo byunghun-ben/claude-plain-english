@@ -1,6 +1,6 @@
 {
   "name": "plain-english",
-  "description": "A scaffold for a direct, reader-first English output style.",
+  "description": "Direct, reader-first English that preserves facts, uncertainty, and verification boundaries.",
   "version": "0.0.0",
   "author": {
     "name": "Byunghun"
