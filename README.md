@@ -23,8 +23,6 @@ public-boundary check, and the release gate. A paid blinded comparison against
 Default is available as an optional evaluation, not as a release requirement,
 and it has not been run.
 
-Implementation is tracked in GitHub issues and in [`.ralph/plan.md`](.ralph/plan.md).
-
 ## What the style asks for
 
 - Lead with the result or the current state, and say the conclusion once.
