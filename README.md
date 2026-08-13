@@ -15,6 +15,20 @@ English-specific habits: padded openings, the same conclusion said three times,
 headings on a three-sentence answer, telegraphic fragments, and confident
 wording that outruns the evidence.
 
+## When you work in more than one language
+
+Plain English `v0.1.0` remains available and can continue to be used. If you want the response language to follow what the user writes or explicitly requests, consider the broader [Plain Language `v0.1.0`](https://github.com/byunghun-ben/claude-plain-language/releases/tag/v0.1.0) plugin instead.
+
+This is an opt-in choice, not an automatic migration. You can keep Plain English installed for rollback, but do not enable both plugins at the same time: each one forces an output style, and simultaneous forced styles are unsupported.
+
+```sh
+claude plugin disable plain-english@claude-plain-english --scope user
+claude plugin marketplace add --scope user https://github.com/byunghun-ben/claude-plain-language.git
+claude plugin install --scope user plain-language@claude-plain-language
+```
+
+The existing Plain English release and plugin ID have not changed. See the standalone [Plain English `v0.1.0` release](https://github.com/byunghun-ben/claude-plain-english/releases/tag/v0.1.0) and the [isolated lifecycle record](https://github.com/byunghun-ben/claude-plain-language/blob/v0.1.0/docs/verification/lifecycle.md) for the verified installation boundary.
+
 ## Current status
 
 Version 0.1.0 includes the output style, its contract test, the deterministic
