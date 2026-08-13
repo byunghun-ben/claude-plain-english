@@ -17,7 +17,6 @@ Only these repository-relative files may be published:
 - `SECURITY.md`
 - `.claude-plugin/marketplace.json`
 - `.github/workflows/ci.yml`
-- `.ralph/plan.md`
 - `plugins/plain-english/.claude-plugin/plugin.json`
 - `plugins/plain-english/output-styles/plain-english.md`
 - `fixtures/README.md`
